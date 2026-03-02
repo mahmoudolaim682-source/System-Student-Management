@@ -22,11 +22,17 @@ public class Student {
         return grade;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setGrade(double grade) {
         this.grade = grade;
     }
 
     public void displayInfo() {
-        System.out.println("ID: " + id + " | Name: " + name + " | Grade: " + grade);
+        System.out.println("ID: " + id +
+                " | Name: " + name +
+                " | Grade: " + grade);
     }
 }
