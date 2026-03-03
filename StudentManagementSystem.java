@@ -12,10 +12,12 @@ public class StudentManagementSystem {
             System.out.println("------------------------------------");
             System.out.println("1. Add Student");
             System.out.println("2. View Students");
-            System.out.println("3. Add Course");
-            System.out.println("4. View Courses");
-            System.out.println("5. Record Grade");
-            System.out.println("6. Exit");
+            System.out.println("3. Remove Student");
+            System.out.println("4. Update Student");
+            System.out.println("5. Add Course");
+            System.out.println("6. View Courses");
+            System.out.println("7. Record Grade");
+            System.out.println("8. Exit");
             System.out.print("Choose an option: ");
 
             int choice = Integer.parseInt(input.nextLine());
@@ -38,6 +40,23 @@ public class StudentManagementSystem {
                     break;
 
                 case 3:
+                    System.out.print("Enter Student ID to remove: ");
+                    int removeId = Integer.parseInt(input.nextLine());
+                    admin.removeStudent(removeId);
+                    System.out.println("Student removed if existed.");
+                    break;
+
+                case 4:
+                    System.out.print("Enter Student ID to update: ");
+                    int updateId = Integer.parseInt(input.nextLine());
+
+                    System.out.print("Enter new name: ");
+                    String newName = input.nextLine();
+
+                    admin.updateStudent(updateId, newName);
+                    break;
+
+                case 5:
                     System.out.print("Enter Course Code: ");
                     String code = input.nextLine();
 
@@ -48,11 +67,11 @@ public class StudentManagementSystem {
                     System.out.println("Course added successfully!");
                     break;
 
-                case 4:
+                case 6:
                     admin.viewAllCourses();
                     break;
 
-                case 5:
+                case 7:
                     System.out.print("Enter Student ID: ");
                     int studentId = Integer.parseInt(input.nextLine());
 
@@ -60,10 +79,9 @@ public class StudentManagementSystem {
                     double grade = Double.parseDouble(input.nextLine());
 
                     admin.recordGrade(studentId, grade);
-                    System.out.println("Grade recorded successfully!");
                     break;
 
-                case 6:
+                case 8:
                     System.out.println("Goodbye!");
                     input.close();
                     return;
