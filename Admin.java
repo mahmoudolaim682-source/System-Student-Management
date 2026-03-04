@@ -1,25 +1,51 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class Admin {
-    private ArrayList<Student> students;
-    private ArrayList<Course> courses;
+    private List<Student> students;
+    private List<Course> courses;
 
     public Admin() {
         this.students = new ArrayList<>();
         this.courses = new ArrayList<>();
     }
 
-    public void addStudent(Student student) {
-        students.add(student);
+    private Student findStudentById(int id) {
+        for (Student student : students) {
+            if (student.getId() == id) {
+                return student;
+            }
+        }
+        return null;
     }
 
-    public void removeStudent(int id) {
-        students.removeIf(student -> student.getId() == id);
+    public boolean addStudent(Student student) {
+        if (student == null) {
+            System.out.println("Error: Cannot add a null student");
+            return false;
+        }
+        if (findStudentById(student.getId()) != null) {
+            System.out.println("Error: Student with ID " + student.getId() + " already exists");
+            return false;
+        }
+        students.add(student);
+        System.out.println("Success: Student added successfully");
+        return true;
+    }
+
+    public boolean removeStudent(int id) {
+        boolean removed = students.removeIf(student -> student.getId() == id);
+        if (removed) {
+            System.out.println("Success: Student removed successfully");
+        } else {
+            System.out.println("Error: Student with ID " + id + " not found");
+        }
+        return removed;
     }
 
     public void viewAllStudents() {
         if (students.isEmpty()) {
-            System.out.println("No students found.");
+            System.out.println("No students found");
             return;
         }
         for (Student s : students) {
@@ -27,24 +53,40 @@ public class Admin {
         }
     }
 
-    public void updateStudent(int id, String name){
-        for(Student student : students){
-            if(student.getId() == id){
-                student.setName(name);
-                System.out.println("Student updated successfully!");
-                return;
-            }
+    public boolean updateStudent(int id, String name) {
+        if (name == null || name.trim().isEmpty()) {
+            System.out.println("Error: Invalid name provided");
+            return false;
         }
-        System.out.println("Student not found!");
+        
+        Student student = findStudentById(id);
+        if (student != null) {
+            student.setName(name.trim());
+            System.out.println("Success: Student updated successfully");
+            return true;
+        }
+        
+        System.out.println("Error: Student with ID " + id + " not found");
+        return false;
     }
 
-    public void addCourse(Course course) {
+    public boolean addCourse(Course course) {
+        if (course == null) {
+            System.out.println("Error: Cannot add a null course");
+            return false;
+        }
+        if (courses.contains(course)) {
+            System.out.println("Error: Course already exists");
+            return false;
+        }
         courses.add(course);
+        System.out.println("Success: Course added successfully");
+        return true;
     }
 
     public void viewAllCourses() {
         if (courses.isEmpty()) {
-            System.out.println("No courses found.");
+            System.out.println("No courses found");
             return;
         }
         for (Course c : courses) {
@@ -52,13 +94,20 @@ public class Admin {
         }
     }
 
-    public void recordGrade(int id, double grade) {
-        for (Student s : students) {
-            if (s.getId() == id) {
-                s.setGrade(grade);
-                return;
-            }
+    public boolean recordGrade(int id, double grade) {
+        if (grade < 0.0 || grade > 100.0) {
+            System.out.println("Error: Invalid grade. Must be between 0 and 100");
+            return false;
         }
-        System.out.println("Student not found!");
+        
+        Student student = findStudentById(id);
+        if (student != null) {
+            student.setGrade(grade);
+            System.out.println("Success: Grade recorded successfully");
+            return true;
+        }
+        
+        System.out.println("Error: Student with ID " + id + " not found");
+        return false;
     }
 }
