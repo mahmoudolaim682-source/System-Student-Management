@@ -1,12 +1,10 @@
 import java.util.Scanner;
 
 public class StudentManagementSystem {
+    private static final Scanner input = new Scanner(System.in);
+    private static final Admin admin = new Admin();
 
     public static void main(String[] args) {
-
-        Scanner input = new Scanner(System.in);
-        Admin admin = new Admin();
-
         while (true) {
             System.out.println("\nWelcome to Student Management System");
             System.out.println("------------------------------------");
@@ -18,76 +16,86 @@ public class StudentManagementSystem {
             System.out.println("6. View Courses");
             System.out.println("7. Record Grade");
             System.out.println("8. Exit");
-            System.out.print("Choose an option: ");
 
-            int choice = Integer.parseInt(input.nextLine());
+            int choice = readIntSafe("Choose an option: ");
 
-            switch (choice) {
+            try {
+                switch (choice) {
+                    case 1 -> handleAddStudent();
+                    case 2 -> admin.viewAllStudents();
+                    case 3 -> handleRemoveStudent();
+                    case 4 -> handleUpdateStudent();
+                    case 5 -> handleAddCourse();
+                    case 6 -> admin.viewAllCourses();
+                    case 7 -> handleRecordGrade();
+                    case 8 -> {
+                        System.out.println("Exiting System... Goodbye");
+                        input.close();
+                        return;
+                    }
+                    default -> System.out.println("Invalid choice Please select (1-8)");
+                }
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        }
+    }
 
-                case 1:
-                    System.out.print("Enter Student ID: ");
-                    int id = Integer.parseInt(input.nextLine());
+    private static void handleAddStudent() {
+        int id = readIntSafe("Enter Student ID: ");
+        System.out.print("Enter Name: ");
+        String name = input.nextLine();
+        admin.addStudent(new Student(id, name));
+    }
 
-                    System.out.print("Enter Name: ");
-                    String name = input.nextLine();
+    private static void handleRemoveStudent() {
+        int id = readIntSafe("Enter Student ID to remove: ");
+        admin.removeStudent(id);
+    }
 
-                    admin.addStudent(new Student(id, name));
-                    System.out.println("Student added successfully!");
-                    break;
+    private static void handleUpdateStudent() {
+        int id = readIntSafe("Enter Student ID to update: ");
+        System.out.print("Enter new name: ");
+        String newName = input.nextLine();
+        admin.updateStudent(id, newName);
+    }
 
-                case 2:
-                    admin.viewAllStudents();
-                    break;
+    private static void handleAddCourse() {
+        System.out.print("Enter Course Code: ");
+        String code = input.nextLine();
+        System.out.print("Enter Course Name: ");
+        String courseName = input.nextLine();
+        admin.addCourse(new Course(code, courseName));
+    }
 
-                case 3:
-                    System.out.print("Enter Student ID to remove: ");
-                    int removeId = Integer.parseInt(input.nextLine());
-                    admin.removeStudent(removeId);
-                    System.out.println("Student removed if existed.");
-                    break;
+    private static void handleRecordGrade() {
+        int id = readIntSafe("Enter Student ID: ");
+        double grade = readDoubleSafe("Enter Grade (0-100): ");
+        if (grade < 0 || grade > 100) {
+            System.out.println("Grade must be between (0-100)");
+            return;
+        }
+        admin.recordGrade(id, grade);
+    }
 
-                case 4:
-                    System.out.print("Enter Student ID to update: ");
-                    int updateId = Integer.parseInt(input.nextLine());
+    private static int readIntSafe(String prompt) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                return Integer.parseInt(input.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input Please enter a valid number");
+            }
+        }
+    }
 
-                    System.out.print("Enter new name: ");
-                    String newName = input.nextLine();
-
-                    admin.updateStudent(updateId, newName);
-                    break;
-
-                case 5:
-                    System.out.print("Enter Course Code: ");
-                    String code = input.nextLine();
-
-                    System.out.print("Enter Course Name: ");
-                    String courseName = input.nextLine();
-
-                    admin.addCourse(new Course(code, courseName));
-                    System.out.println("Course added successfully!");
-                    break;
-
-                case 6:
-                    admin.viewAllCourses();
-                    break;
-
-                case 7:
-                    System.out.print("Enter Student ID: ");
-                    int studentId = Integer.parseInt(input.nextLine());
-
-                    System.out.print("Enter Grade: ");
-                    double grade = Double.parseDouble(input.nextLine());
-
-                    admin.recordGrade(studentId, grade);
-                    break;
-
-                case 8:
-                    System.out.println("Goodbye!");
-                    input.close();
-                    return;
-
-                default:
-                    System.out.println("Invalid choice. Try again.");
+    private static double readDoubleSafe(String prompt) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                return Double.parseDouble(input.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input Please enter a valid decimal number");
             }
         }
     }
